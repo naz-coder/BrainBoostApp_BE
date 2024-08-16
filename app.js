@@ -3,8 +3,8 @@ require("./config/database").connect();
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const auth = require("./middleware/auth");
 const User = require("./model/user");
+const verifyToken = require("./middleware/auth");
 
 const app = express();
 app.use(express.json());
@@ -119,7 +119,7 @@ app.post("/api/v1/login", async (req, res) =>{
 });
 
 // Middleware testing
-app.post("/api/v1/welcome", auth, (req, res) => {
+app.get("/api/v1/welcome", verifyToken, (req, res) => {
     res.status(200).send("Welcome to BrainBoost360!");
 })
 
