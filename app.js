@@ -3,13 +3,11 @@ require("./config/database").connect();
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const auth = require("./middleware/auth");
+const User = require("./model/user");
 
 const app = express();
 app.use(express.json());
-
-// importing user context
-const User = require("./model/user");
 
 // Regsiter
 app.post("/api/v1/register", async (req, res) =>{
@@ -19,15 +17,14 @@ app.post("/api/v1/register", async (req, res) =>{
         const {firstName, lastName, email, password, category} = req.body;
 
         // validate user input
-        const normalizedCategory = category.toLowerCase();
-        if(!(email && password && firstName && lastName && normalizedCategory)){
-            res.status(400).send("All input is required");
+        if(!(email && password && firstName && lastName && category)){
+            return res.status(400).send("All input is required");
         }
 
-        // check if user already exist
-        // validate if user exist in our db
-        const oldUser = await User.findOne({email});
+        const normalizedCategory = category.toLowerCase();
 
+        // validate if user exist in our db
+        const oldUser = await User.findOne({email: email.toLowerCase()});
         if (oldUser){
             return res.status(409).send("User Already Exist. Please Login");
         }
@@ -46,7 +43,7 @@ app.post("/api/v1/register", async (req, res) =>{
 
         // Create token
         const token = jwt.sign(
-            {user_id: user._id, email},
+            {user_id: user._id, email: user.email},
             process.env.TOKEN_KEY,
             {
                 expiresIn: "5h",
@@ -54,11 +51,16 @@ app.post("/api/v1/register", async (req, res) =>{
         );
         // Save user token
         user.token = token;
+        await user.save();
+
+        // exclude the password from the response
+        const {password: userPassword, ...userWithoutPassword} = user._doc;
 
         // Return new user
-        res.status(201).json(user);
+        return res.status(201).json(userWithoutPassword);
     }catch(err){
         console.log(err);
+        return res.status(500).send("Internal server error");
     }
 });
 
@@ -115,6 +117,11 @@ app.post("/api/v1/login", async (req, res) =>{
        return res.status(500).send("Internal Server Error");
     }
 });
+
+// Middleware testing
+app.post("/api/v1/welcome", auth, (req, res) => {
+    res.status(200).send("Welcome to BrainBoost360!");
+})
 
 
 module.exports = app;
