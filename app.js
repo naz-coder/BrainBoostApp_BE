@@ -4,6 +4,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+
 const app = express();
 app.use(express.json());
 
@@ -15,10 +16,11 @@ app.post("/api/v1/register", async (req, res) =>{
     // registeration logic
     try{
         // Get user input
-        const {firstName, lastName, email, password} = req.body;
+        const {firstName, lastName, email, password, category} = req.body;
 
         // validate user input
-        if(!(email && password && firstName && lastName)){
+        const normalizedCategory = category.toLowerCase();
+        if(!(email && password && firstName && lastName && normalizedCategory)){
             res.status(400).send("All input is required");
         }
 
@@ -30,7 +32,7 @@ app.post("/api/v1/register", async (req, res) =>{
             return res.status(409).send("User Already Exist. Please Login");
         }
 
-        // Encrypt user password
+        // Encrypt/hash user password
         encryptedUserPassword = await bcrypt.hash(password, 10);
 
         // Create user in our db
@@ -38,7 +40,8 @@ app.post("/api/v1/register", async (req, res) =>{
             first_name: firstName,
             last_name: lastName,
             email: email.toLowerCase(),
-            password: encryptedUserPassword
+            password: encryptedUserPassword,
+            category: normalizedCategory,
         });
 
         // Create token
@@ -59,14 +62,57 @@ app.post("/api/v1/register", async (req, res) =>{
     }
 });
 
+
+
 // Login
-app.post("/api/v1/login", (req, res) =>{
+app.post("/api/v1/login", async (req, res) =>{
     // login logic here
     try{
         //Get user input
         const {email, password} = req.body;
+
+        // validate user input
+        if(!(email && password)){
+            return res.status(400).send("Email and Password is required");
+        }
+
+        // validate if user exist in our db
+        const normalizedEmail = email.toLowerCase();
+        const user = await User.findOne({email: normalizedEmail});
+        console.log('User found:', user);
+
+        // Check if user exists
+        if(!user){
+            return res.status(400).send("Invalid Credentials"); // I.e no user found
+        }
+
+        // check if the password is correct
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if(isPasswordMatch){
+            console.log('Password match:', isPasswordMatch);
+
+            // create token
+            const token = jwt.sign(
+                {user_id: user._id, email},
+                process.env.TOKEN_KEY,
+                {expiresIn: "5h"}
+            );
+            
+            // save user token
+            user.token = token;
+
+            // save updated user wih token in the db
+            await user.save();
+
+            // return user with token insead of password
+            const {password, ...userWithoutPassword} = user._doc;
+            return res.status(200).json(userWithoutPassword);            
+        }else{
+            return res.status(400).send("Invalid Credentials");
+        }
     }catch(err){
-       console.log(err); 
+       console.error(err); 
+       return res.status(500).send("Internal Server Error");
     }
 });
 
