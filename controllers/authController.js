@@ -108,3 +108,12 @@ exports.login = async (req, res) =>{
     }
 };
 
+// logout
+exports.logout = async (req, res) => {
+    try{
+        return res.status(200).send({message: "User logged out successfully"});
+    }catch(err){
+        console.log(err);
+        return res.status(500).send("Internal Server Error");
+    }
+};
