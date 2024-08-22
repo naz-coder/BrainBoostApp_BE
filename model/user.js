@@ -7,12 +7,13 @@ const userSchema = new mongoose.Schema({
     lastName: {type: String, default: null},
     email: {type: String, unique: true},
     password: {type: String},
-    category: {type: String},
+    category: {type: String, enum:["teacher", "student"], required: true},
     subjects: {type: [String]},
     school: {type: String, default: null},
     grade: {type: String, default: null},
     position: {type: String, default: null},
     token: {type: String},
+    createdAt: {type: Date, default: Date.now}
 });
 
 module.exports = mongoose.model("user", userSchema);
