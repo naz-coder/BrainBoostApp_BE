@@ -2,8 +2,17 @@ const mongoose = require("mongoose");
 
 // Schema for teaching material
 const quizSchema = new mongoose.Schema({
-    materialId:{type: mongoose.Schema.Types.ObjectId, ref: "TeachingMaterial", required: true},
-    questions: {question: String, options: [String], correctAnswer: String},
+    topic:{type: String, required: true},
+    subject: {type: String, required: true},
+    materialType: {type: String, default: "Quiz"},
+    questions: [
+        {
+            question: {type: String, required: true}, 
+            options: [{type: String, required: true}], 
+            correctAnswer: {type: String, required: true}
+        }
+    ],
+    teacher: {type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true},
     uploadDate: {type: Date, default: Date.now}
 });
 

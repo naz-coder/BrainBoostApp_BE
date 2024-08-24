@@ -18,9 +18,12 @@ const storage = multer.memoryStorage();
 const upload = multer({storage});
 
 // Route to handle file upload
-router.post('/upload-material', auth, upload.single("file"), async(req, res) =>{
+ router.post('/upload-material', auth, upload.single("file"), async(req, res) =>{
     const file = req.file;
-    const teacherId = req.user._id;
+    const teacherId = req.user?._id;
+    if(!teacherId){
+        return res.status(400).json({error: "Teacher ID is missing"});
+    }
     const fileName = `${uuidv4()}-${file.originalname}`;
 
     // upload the file to S3
@@ -36,9 +39,10 @@ router.post('/upload-material', auth, upload.single("file"), async(req, res) =>{
 
         // save file metadata to MongoDB
         const newMaterial = new TeachingMaterial({
-            title: req.body.title,
+            topic: req.body.topic,
             s3FileUrl: uploadResult.Location,       // s3 url of the uploaded file
             subject: req.body.subject,
+            materialType: req.body.materialType,
             teacher: teacherId,
         });
 
