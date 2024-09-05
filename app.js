@@ -7,8 +7,9 @@ const app = express();
 
 // import routes
 const authRoutes = require("./routes/authRoutes");
-const materialRoutes = require("./routes/teacherFileMgt");
+const uploadMaterialRoutes = require("./routes/teacherFileMgt");
 const quizRoutes = require("./routes/teacherQuizMgt");
+const fetchMaterialRoutes = require("./routes/viewMaterials");
 // const materialRoutes = require("./routes/matrials");
 // const userRoutes = require("./routes/userRoutes");
 
@@ -18,8 +19,9 @@ app.use(cors());
 
 // use routes
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/resources", materialRoutes);
+app.use("/api/v1/resources", uploadMaterialRoutes);
 app.use("/api/v1/quiz", quizRoutes);
+app.use("/api/v1/materials", fetchMaterialRoutes);
 // app.use("/api/users", userRoutes);
 
 // Middleware testing

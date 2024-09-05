@@ -6,14 +6,14 @@ const jwt = require("jsonwebtoken");
 exports.register = async (req, res) =>{
     try{
         // Get user input
-        const {title, firstName, lastName, email, password, category, subjects, school, grade, position} = req.body;
+        const {title, firstName, lastName, email, password, role, subjects, school, grade, position} = req.body;
 
         // validate user input
-        if(!(title && email && password && firstName && lastName && category && subjects && school && grade || position)){
+        if(!(title && email && password && firstName && lastName && role && subjects && school && grade || position)){
             return res.status(400).send("All input is required");
         }
 
-        const normalizedCategory = category.toLowerCase();
+        const normalizedRole = role.toLowerCase();
 
         // validate if user exist in our db
         const oldUser = await User.findOne({email: email.toLowerCase()});
@@ -21,7 +21,7 @@ exports.register = async (req, res) =>{
             return res.status(409).send("User Already Exist. Please Login");
         }
 
-        // Encrypt/hash user password
+        // Hash user password
         encryptedUserPassword = await bcrypt.hash(password, 10);
 
         // Create user in our db
@@ -31,7 +31,7 @@ exports.register = async (req, res) =>{
             lastName: lastName,
             email: email.toLowerCase(),
             password: encryptedUserPassword,
-            category: normalizedCategory,
+            role: normalizedRole,
             subjects: subjects, 
             school: school, 
             grade: grade,
@@ -84,12 +84,12 @@ exports.login = async (req, res) => {
         // Check if the password is correct
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch) {
-            return res.status(401).send("Invalid Credentials"); // Incorrect password
+            return res.status(400).send("Invalid Credentials"); // Incorrect password
         }
 
         // Create token
         const token = jwt.sign(
-            { user_id: user._id, email: user.email, category: user.category },
+            { user_id: user._id, email: user.email, role: user.role },
             process.env.TOKEN_KEY,
             { expiresIn: "1h" }
         );
@@ -101,13 +101,13 @@ exports.login = async (req, res) => {
         // Return user with token instead of password
         const { password: userPassword, ...userWithoutPassword } = user._doc;
 
-        // Check user category and redirect accordingly
-        if (user.category === "student") {
+        // Check user role and redirect accordingly
+        if (user.role === "student") {
             return res.status(200).json({ ...userWithoutPassword, redirect: "/Student-Dashboard" });
-        } else if (user.category === "teacher") {
+        } else if (user.role === "teacher") {
             return res.status(200).json({ ...userWithoutPassword, redirect: "/Teacher-Dashboard" });
         } else {
-            return res.status(403).send("Access denied. Invalid user category.");
+            return res.status(403).send("Access denied. Invalid user role.");
         }
         
     } catch (err) {
