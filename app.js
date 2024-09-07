@@ -10,6 +10,7 @@ const authRoutes = require("./routes/authRoutes");
 const uploadMaterialRoutes = require("./routes/teacherFileMgt");
 const quizRoutes = require("./routes/teacherQuizMgt");
 const fetchMaterialRoutes = require("./routes/viewMaterials");
+const fetchQuizRoutes = require("./routes/viewQuiz");
 // const materialRoutes = require("./routes/matrials");
 // const userRoutes = require("./routes/userRoutes");
 
@@ -22,6 +23,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/resources", uploadMaterialRoutes);
 app.use("/api/v1/quiz", quizRoutes);
 app.use("/api/v1/materials", fetchMaterialRoutes);
+app.use("/api/v1/quiz", fetchQuizRoutes);
 // app.use("/api/users", userRoutes);
 
 // Middleware testing
