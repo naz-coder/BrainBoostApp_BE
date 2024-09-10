@@ -1,6 +1,7 @@
 const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const TokenBlacklist = require("../middleware/tokenBlacklist");
 
 // Regsiter
 exports.register = async (req, res) =>{
@@ -91,7 +92,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign(
             { user_id: user._id, email: user.email, role: user.role },
             process.env.TOKEN_KEY,
-            { expiresIn: "1h" }
+            { expiresIn: "5h" }
         );
 
         // Save user token (consider if you really need to store the token in the database)
@@ -121,7 +122,14 @@ exports.login = async (req, res) => {
 // logout
 exports.logout = async (req, res) => {
     try{
-        return res.status(200).send({message: "User logged out successfully"});
+        const authHeader = req.headers['authorization'];
+        if(!authHeader || !authHeader.startsWith('Bearer ')){
+           return res.status(400).send({message: "Authorization token not provided or invalid format"}) ;
+        }
+        // Extract the token from the 'Bearer <token>' format
+        const token = authHeader.split(' ')[1];
+        TokenBlacklist.add({token});
+        return res.status(200).send({message: "Logged out successfully!"});
     }catch(err){
         console.log(err);
         return res.status(500).send("Internal Server Error");
