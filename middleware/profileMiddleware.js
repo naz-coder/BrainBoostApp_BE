@@ -7,7 +7,7 @@ const fetchUserProfile = async (req, res, next) => {
 
         // Fetch user profile with the necessary fields
         const user = await User.findById(userId).select(
-            'title firstName lastName email role subjects school grade position'
+            '_id title firstName lastName email role subjects school grade position'
         );
         if(!user){
             return res.status(404).json({message: 'User not found'});
