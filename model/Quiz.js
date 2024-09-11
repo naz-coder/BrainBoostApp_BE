@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-// Schema for teaching material
+// Schema for quiz
 const quizSchema = new mongoose.Schema({
     topic:{type: String, required: true},
     subject: {type: String, required: true},

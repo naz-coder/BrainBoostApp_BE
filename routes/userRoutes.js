@@ -1,9 +1,7 @@
-// const express = require("express");
-// const router = express.Router();
-// const userController = require("../controllers/userController");
-// const authMiddleware = require("../middleware/authMiddleware");
+const express = require("express");
+const router = express.Router();
+const userController = require("../controllers/userController");
 
-// router.get("/api/v1/profile", authMiddleware, userController.getUserProfile);
-// router.put("/api/v1/login", authMiddleware, userController.updateUserProfile);
+router.put("/update-progress", userController.updateUserProgress);
 
-// module.exports = router;
+module.exports = router;

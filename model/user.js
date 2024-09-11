@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
     grade: {type: String, default: null},
     position: {type: String, default: null},
     token: {type: String},
+    completedQuizzes: {type: [String], default: []},    // For students
+    completedMaterials: {type: [String], default: []},  // For students
+    submittedQuizzes: {type: [String], default: []},    // For teachers
+    submittedMaterials: {type: [String], default: []},  // For teachers
     createdAt: {type: Date, default: Date.now}
 });
 
