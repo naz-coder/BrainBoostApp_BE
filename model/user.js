@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
     token: {type: String},
     completedQuizzes: {type: [String], default: []},    // For students
     completedMaterials: {type: [String], default: []},  // For students
+    completedRevisionMaterials: {type: [String], default: []},  // For students
     submittedQuizzes: {type: [String], default: []},    // For teachers
     submittedMaterials: {type: [String], default: []},  // For teachers
     createdAt: {type: Date, default: Date.now}

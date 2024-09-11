@@ -17,7 +17,12 @@ router.get("/user-profile", verifyToken, fetchUserProfile, (req, res) => {
         subjects: user.subjects, 
         school: user.school, 
         grade: user.grade,
-        position: user.position
+        position: user.position,
+        completedQuizzes: user.completedQuizzes,
+        completedMaterials: user.completedMaterials,
+        completedRevisionMaterials: user.completedRevisionMaterials,
+        submittedQuizzes: user.submittedQuizzes,
+        submittedMaterials: user.submittedMaterials,
     });
 });
 

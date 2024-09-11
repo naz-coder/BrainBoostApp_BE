@@ -4,6 +4,7 @@ const AWS = require("aws-sdk");
 const {v4: uuidv4} = require("uuid");
 const router = express.Router();
 const TeachingMaterial = require("../model/TeachingMaterial");
+const updateTeacherSubmissions = require("../utils/updateTeacherSubmissions");
 const auth = require("../middleware/authMiddleware");
 
 // AWS s3 configuration
@@ -48,6 +49,7 @@ const upload = multer({storage});
 
         // Save the file to the db
         await newMaterial.save();
+        await updateTeacherSubmissions(teacherId);
         res.status(201).json({message: "File uploaded successfully", material: newMaterial});
     }catch(err){
         console.error(err);

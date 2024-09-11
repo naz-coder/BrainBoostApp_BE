@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const QuizContent = require("../model/Quiz");
 const auth = require("../middleware/authMiddleware");
+const updateTeacherSubmissions = require("../utils/updateTeacherSubmissions");
+
 
 // Route to handle file upload
  router.post('/submit-quiz', auth, async(req, res) =>{
@@ -22,6 +24,7 @@ const auth = require("../middleware/authMiddleware");
 
         // Save the content to the db
         await newQuiz.save();
+        await updateTeacherSubmissions(teacherId);
         res.status(201).json({message: "Quiz uploaded successfully", content: newQuiz});
     }catch(err){
         console.error(err);
