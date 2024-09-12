@@ -13,6 +13,7 @@ const fetchMaterialRoutes = require("./routes/viewMaterials");
 const fetchQuizRoutes = require("./routes/viewQuiz");
 const userProfileRoutes = require("./routes/userProfile");
 const userProgressRoutes = require("./routes/userRoutes");
+const updateMaterialStatusRoutes = require("./routes/viewMaterials");
 
 // middleware and CORs enabled for all routes
 app.use(express.json({limit: "50mb"}));
@@ -26,6 +27,7 @@ app.use("/api/v1/materials", fetchMaterialRoutes);
 app.use("/api/v1/quiz", fetchQuizRoutes);
 app.use("/api/v1/user", userProfileRoutes);
 app.use("/api/v1/user", userProgressRoutes);
+app.use("/api/v1/materials", updateMaterialStatusRoutes);
 
 // Middleware testing
 app.get("/api/v1/welcome", verifyToken, (req, res) => {

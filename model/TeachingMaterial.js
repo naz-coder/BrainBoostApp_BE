@@ -7,7 +7,8 @@ const teachingMaterialSchema = new mongoose.Schema({
     subject: {type: String, required: true},
     materialType: {type: String, required: true},
     teacher: {type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true},
-    uploadDate: {type: Date, default: Date.now}
+    uploadDate: {type: Date, default: Date.now},
+    isActive: {type: Boolean, default: true},
 });
 
 module.exports = mongoose.model("TeachingMaterial", teachingMaterialSchema);

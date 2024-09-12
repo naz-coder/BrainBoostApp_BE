@@ -13,7 +13,8 @@ const quizSchema = new mongoose.Schema({
         }
     ],
     teacher: {type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true},
-    uploadDate: {type: Date, default: Date.now}
+    uploadDate: {type: Date, default: Date.now},
+    active: {type: Boolean, default: true},
 });
 
 module.exports = mongoose.model("Quiz", quizSchema);

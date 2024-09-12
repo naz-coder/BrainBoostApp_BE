@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const TeachingMaterial = require("../model/TeachingMaterial");
 const verifyToken = require("../middleware/authMiddleware");
+const { materialStatus } = require("../controllers/materialController");
 
 // route to fetch learning materials for students
 router.get("/view-materials", verifyToken, async(req, res) => {
@@ -25,5 +26,7 @@ router.get("/view-materials", verifyToken, async(req, res) => {
         res.status(500).json({error: "Failed to fetch materials"});
     }
 });
+
+router.patch("/:materialId/inactive", verifyToken, materialStatus);
 
 module.exports = router;
