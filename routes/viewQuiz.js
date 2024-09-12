@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const TestQuiz = require("../model/Quiz");
 const verifyToken = require("../middleware/authMiddleware");
+const { quizStatus } = require("../controllers/quizController");
 
 // route to fetch learning materials for students
 router.get("/view-quiz", verifyToken, async(req, res) => {
@@ -25,5 +26,8 @@ router.get("/view-quiz", verifyToken, async(req, res) => {
         res.status(500).json({error: "Failed to fetch quiz"});
     }
 });
+
+router.patch("/:quizId/inactive", verifyToken, quizStatus);
+
 
 module.exports = router;

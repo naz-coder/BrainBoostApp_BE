@@ -1,7 +1,7 @@
 const {TeachingMaterial} = require("../model/TeachingMaterial");
 
 exports.materialStatus = async (req, res) => {
-    const {materialId} = re.params;
+    const {materialId} = req.params;
     const userId = req.user._id;
 
     try{
@@ -11,7 +11,7 @@ exports.materialStatus = async (req, res) => {
         }
 
         // Check if the teacher owns the material
-        if(material.creator.toString() !== userId){
+        if(material.teacher.toString() !== userId){
             return res.status(403).json({message: "Unauthorized: You can only inactivate materials you created"});
         }
 
