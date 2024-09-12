@@ -23,6 +23,7 @@ router.get("/user-profile", verifyToken, fetchUserProfile, (req, res) => {
         completedRevisionMaterials: user.completedRevisionMaterials,
         submittedQuizzes: user.submittedQuizzes,
         submittedMaterials: user.submittedMaterials,
+        totalTimeSpent: user.totalTimeSpent,
     });
 });
 

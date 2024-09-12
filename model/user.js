@@ -18,7 +18,9 @@ const userSchema = new mongoose.Schema({
     completedRevisionMaterials: {type: [String], default: []},  // For students
     submittedQuizzes: {type: [String], default: []},    // For teachers
     submittedMaterials: {type: [String], default: []},  // For teachers
-    createdAt: {type: Date, default: Date.now}
+    createdAt: {type: Date, default: Date.now},
+    lastLogin: {type: Date, default: null},
+    totalTimeSpent: {type: Number, default: 0}
 });
 
 module.exports = mongoose.model("user", userSchema);

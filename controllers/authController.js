@@ -36,8 +36,10 @@ exports.register = async (req, res) =>{
             subjects: subjects, 
             school: school, 
             grade: grade,
-            position: position
+            position: position,
+            lastLogin: Date.now(),
         });
+        await user.save();
 
         // Create token
         const token = jwt.sign(
@@ -88,6 +90,9 @@ exports.login = async (req, res) => {
             return res.status(400).send("Invalid Credentials"); // Incorrect password
         }
 
+        user.lastLogin = Date.now();
+        await user.save();
+
         // Create token
         const token = jwt.sign(
             { user_id: user._id, email: user.email, role: user.role },
@@ -126,6 +131,17 @@ exports.logout = async (req, res) => {
         if(!authHeader || !authHeader.startsWith('Bearer ')){
            return res.status(400).send({message: "Authorization token not provided or invalid format"}) ;
         }
+
+        // Calculate the time difference between lastLogin and now
+        const user = await User.findById(req.user._id);
+        const currentTime = Date.now();
+        const timeSpent = (currentTime - new Date(user.lastLogin)) / (1000 * 60 * 60);  // convert ms to hrs
+
+        // Update the total time spent
+        user.totalTimeSpent += timeSpent;
+        user.lastLogin = null;
+        await user.save();
+
         // Extract the token from the 'Bearer <token>' format
         const token = authHeader.split(' ')[1];
         TokenBlacklist.add({token});
