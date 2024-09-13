@@ -19,14 +19,19 @@ const forumThreadRoutes = require("./routes/threadRoutes");
 
 // middleware and CORs enabled for all routes
 app.use(express.json({limit: "50mb"}));
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:6262", "https://brainboostapp-be.onrender.com"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 // use routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/resources", uploadMaterialRoutes);
-app.use("/api/v1/quiz", quizRoutes);
+app.use("/api/v1/quiz/manage", quizRoutes);
 app.use("/api/v1/materials", fetchMaterialRoutes);
-app.use("/api/v1/quiz", fetchQuizRoutes);
+app.use("/api/v1/quiz/view", fetchQuizRoutes);
 app.use("/api/v1/user", userProfileRoutes);
 app.use("/api/v1/user", userProgressRoutes);
 app.use("/api/v1/materials", updateMaterialStatusRoutes);
