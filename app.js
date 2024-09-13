@@ -33,8 +33,8 @@ app.use("/api/v1/quiz/manage", quizRoutes);
 app.use("/api/v1/materials", fetchMaterialRoutes);
 app.use("/api/v1/quiz/view", fetchQuizRoutes);
 app.use("/api/v1/user", userProfileRoutes);
-app.use("/api/v1/user", userProgressRoutes);
-app.use("/api/v1/materials", updateMaterialStatusRoutes);
+app.use("/api/v1/user/manage", userProgressRoutes);
+app.use("/api/v1/materials/manage", updateMaterialStatusRoutes);
 app.use("/api/v1/quiz", updateQuizStatusRoutes);
 app.use("/api/v1/forum", forumThreadRoutes);
 
