@@ -23,8 +23,8 @@ const verifyToken = (req, res, next) => {
         // veryify the token using the configured secret
         const decoded = jwt.verify(token, config.TOKEN_KEY || process.env.TOKEN_KEY);
         // attach the user details to the request
-        req.user = {_id: decoded.user_id || decoded._id, role: decoded.role};
-        // console.log("Token decoded", decoded);
+        req.user = {_id: decoded.user_id || decoded._id, role: decoded.role, userName: decoded.firstName};
+        console.log("Token decoded", decoded);
     }catch(err){
         return res.status(401).send("Invalid Token");
     }

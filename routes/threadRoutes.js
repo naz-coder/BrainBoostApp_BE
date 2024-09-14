@@ -19,7 +19,7 @@ router.post('/threads', verifyToken, async (req, res) => {
             title, 
             content, 
             user: req.user._id,
-            userName: req.user.firstName,
+            userName: req.user.userName,
         });
         await thread.save();
         res.json(thread);
@@ -37,7 +37,7 @@ router.post('/threads/:id/comments', verifyToken, async (req, res) => {
         thread.comments.push({
             content, 
             user: req.user._id,
-            userName: req.user.firstName,
+            userName: req.user.userName,
         });
         await thread.save();
         res.json(thread);
