@@ -15,7 +15,12 @@ router.get("/threads", async(req, res) => {
 router.post('/threads', verifyToken, async (req, res) => {
     try{
         const {title, content} = req.body;
-        const thread = await Thread({title, content, user: req.user._id});
+        const thread = await Thread({
+            title, 
+            content, 
+            user: req.user._id,
+            userName: req.user.firstName,
+        });
         await thread.save();
         res.json(thread);
     }catch(error){
@@ -29,7 +34,11 @@ router.post('/threads/:id/comments', verifyToken, async (req, res) => {
         const thread = await Thread.findById(req.params.id);
         
         if(!thread) return res.status(404).json({message: "Thread not found!"});
-        thread.comments.push({content, user: req.user._id});
+        thread.comments.push({
+            content, 
+            user: req.user._id,
+            userName: req.user.firstName,
+        });
         await thread.save();
         res.json(thread);
     }catch(error){
