@@ -21,7 +21,7 @@ const forumThreadRoutes = require("./routes/threadRoutes");
 app.use(express.json({limit: "50mb"}));
 // app.use(cors());
 app.use(cors({
-    origin: ["http://localhost:6262", "https://brainboostapp-be.onrender.com"],
+    origin: ["http://localhost:6262", "https://brainboostapp-be.onrender.com", "https://brainboost360.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
